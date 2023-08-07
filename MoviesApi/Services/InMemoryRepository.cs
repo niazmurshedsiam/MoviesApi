@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoviesApi.Services
 {
-    public class InMemoryRepository:IRepository
+    public class InMemoryRepository : IRepository
     {
         private List<Genre> _genres;
         public InMemoryRepository()
@@ -20,6 +20,13 @@ namespace MoviesApi.Services
         public List<Genre> GetAllGenres()
         {
             return _genres;
+        }
+
+
+
+        public Genre GetGenreById(int id)
+        {
+            return _genres.Where(x => x.Id == id).FirstOrDefault();
         }
     }
 }
