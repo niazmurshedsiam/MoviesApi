@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MoviesApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace MoviesApi.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IRepository _repository;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
@@ -26,7 +28,9 @@ namespace MoviesApi.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            
             var rng = new Random();
+            
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
