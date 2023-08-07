@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace MoviesApi.Controllers
 {
     [Route("api/genres")]
+    [ApiController]
     public class GenresController:ControllerBase
     {
         private readonly IRepository _repository;
@@ -19,7 +20,7 @@ namespace MoviesApi.Controllers
         [HttpGet]//api/genres
         //[HttpGet("list")]//api/genres/list
         //[HttpGet("/allgenres")]//allgenres
-        public List<Genre> Get()
+        public ActionResult<List<Genre>> Get()
         {
             return _repository.GetAllGenres();
         }
@@ -28,12 +29,12 @@ namespace MoviesApi.Controllers
         [HttpGet("{id}")]
 
         //[HttpGet("Id:int/{param2=felipe}")]
-        public Genre GetGenreById(int id)
+        public ActionResult<Genre> GetGenreById(int id)
         {
             var genre = _repository.GetGenreById(id);
             if(genre == null)
             {
-                //return NotFound();
+                return NotFound();
             }
             return genre;
         }
