@@ -20,9 +20,9 @@ namespace MoviesApi.Controllers
         [HttpGet]//api/genres
         //[HttpGet("list")]//api/genres/list
         //[HttpGet("/allgenres")]//allgenres
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var allData = _repository.GetAllGenres();
+            var allData = await _repository.GetAllGenres();
 
             if(allData == null)
             {
