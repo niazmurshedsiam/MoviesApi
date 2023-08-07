@@ -20,23 +20,29 @@ namespace MoviesApi.Controllers
         [HttpGet]//api/genres
         //[HttpGet("list")]//api/genres/list
         //[HttpGet("/allgenres")]//allgenres
-        public ActionResult<List<Genre>> Get()
+        public IActionResult Get()
         {
-            return _repository.GetAllGenres();
+            var allData = _repository.GetAllGenres();
+
+            if(allData == null)
+            {
+                return NotFound();
+            }
+            return Ok(allData);
         }
        
 
         [HttpGet("{id}")]
 
         //[HttpGet("Id:int/{param2=felipe}")]
-        public ActionResult<Genre> GetGenreById(int id)
+        public IActionResult GetGenreById(int id)
         {
             var genre = _repository.GetGenreById(id);
             if(genre == null)
             {
                 return NotFound();
             }
-            return genre;
+            return Ok(genre);
         }
     }
 }
