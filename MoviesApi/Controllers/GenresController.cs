@@ -32,7 +32,7 @@ namespace MoviesApi.Controllers
         }
        
 
-        [HttpGet("{id}")]
+        [HttpGet("{id : int}")]
 
         //[HttpGet("Id:int/{param2=felipe}")]
         public IActionResult GetGenreById(int id)
