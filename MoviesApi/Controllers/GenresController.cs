@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MoviesApi.Entities;
+using MoviesApi.Filters;
 using MoviesApi.Services;
 using System;
 using System.Collections.Generic;
@@ -11,6 +15,7 @@ namespace MoviesApi.Controllers
 {
     [Route("api/genres")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GenresController:ControllerBase
     {
         private readonly IRepository _repository;
@@ -23,6 +28,8 @@ namespace MoviesApi.Controllers
         [HttpGet]//api/genres
         //[HttpGet("list")]//api/genres/list
         //[HttpGet("/allgenres")]//allgenres
+        //[ResponseCache(Duration =60)]
+        [ServiceFilter(typeof(MyActionFilter))]
         public async Task<IActionResult> Get()
         {
             var allData = await _repository.GetAllGenres();
