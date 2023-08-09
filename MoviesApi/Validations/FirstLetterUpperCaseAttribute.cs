@@ -10,12 +10,13 @@ namespace MoviesApi.Validations
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if(value == null || string.IsNullOrEmpty(value.ToString()))
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
             {
                 return ValidationResult.Success;
             }
-            var firstName = value.ToString()[0].ToString();
-            if(firstName != firstName.ToString())
+
+            var firstLetter = value.ToString()[0].ToString();
+            if (firstLetter != firstLetter.ToString())
             {
                 return new ValidationResult("First Letter Should be UpperCase");
             }
