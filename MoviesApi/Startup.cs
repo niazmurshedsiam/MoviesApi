@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using MoviesApi.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,8 +39,30 @@ namespace MoviesApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            app.Use(async (context, next) => {
+                using(var swapStream = new MemoryStream())
+                {
+                    var orginalReposeBody = context.Response.Body;
+                    context.Response.Body = swapStream;
+
+                    await next.Invoke();
+
+                    swapStream.Seek(0, SeekOrigin.Begin);
+                    string resposeBody = new StringReader(swapStream).ReadToEnd();
+                    swapStream.Seek(0, SeekOrigin.Begin);
+                    await swapStream.CopyToAsync(orginalReposeBody);
+                    context.Response.Body = orginalReposeBody;
+
+                    logger.LogInformation(resposeBody);
+                }
+            });
+            app.Map("/map", (app) => {
+                app.Run(async context => {
+                    await context.Response.WriteAsync("I'm short-circuiting the pipeline");
+                });
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
