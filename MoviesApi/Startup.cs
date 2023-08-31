@@ -41,6 +41,13 @@ namespace MoviesApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MoviesApi", Version = "v1" });
             });
+            services.AddCors(options => {
+                var frontendURL = Configuration.GetValue<string>("frontend_url");
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +85,8 @@ namespace MoviesApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseResponseCaching();
 
