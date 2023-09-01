@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MoviesApi.Entities;
 using MoviesApi.Filters;
@@ -16,19 +17,21 @@ namespace MoviesApi.Controllers
     [Route("api/genres")]
     //[ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class GenresController:ControllerBase
+    public class GenresController : ControllerBase
     {
-        
+
         private readonly ILogger<GenresController> _logger;
-        public GenresController(ILogger<GenresController> logger)
+        private readonly ApplicationDbContext _context;
+        public GenresController(ILogger<GenresController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
         [HttpGet]
         public async Task<ActionResult<List<Genre>>> Get()
         {
             _logger.LogInformation("Getting All the Genres");
-            return new List<Genre>() { new Genre() { Id=1,Name="Comedy" } };
+            return await _context.Genres.ToListAsync();
         }
 
         //api/genres
@@ -70,10 +73,18 @@ namespace MoviesApi.Controllers
         //    return Ok(genre);
         //}
 
-        [HttpPost]
-        public ActionResult Post([FromBody] Genre genre)
+        [HttpGet("{Id:int}")]
+        public  ActionResult<Genre> Get( int id)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] Genre genre)
+        {
+            _context.Add(genre);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
         [HttpPut]
         public ActionResult Put([FromBody] Genre genre) {
