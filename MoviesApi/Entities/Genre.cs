@@ -10,9 +10,9 @@ namespace MoviesApi.Entities
     public class Genre
     {
         public int Id { get; set; }
-        //[Required(ErrorMessage="The Feild Name Required")]
-        //[StringLength(20)]
-       // [FirstLetterUpperCaseAttribute]
+        [Required(ErrorMessage="The Feild Name Required")]
+        [StringLength(50)]
+        [FirstLetterUpperCaseAttribute]
         public string Name { get; set; }
 
         //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

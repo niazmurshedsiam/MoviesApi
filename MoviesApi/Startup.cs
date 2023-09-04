@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MoviesApi.APIBehavior;
 using MoviesApi.Filters;
 using MoviesApi.Services;
 using System;
@@ -37,7 +38,10 @@ namespace MoviesApi
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
-            services.AddControllers();
+            services.AddControllers(options => {
+                options.Filters.Add(typeof(MyActionFilter));
+                options.Filters.Add(typeof(ParseBadRequest));
+            }).ConfigureApiBehaviorOptions(BadRequestsBehavior.Parse);
             services.AddResponseCaching();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             services.AddSingleton<IRepository,InMemoryRepository>();
