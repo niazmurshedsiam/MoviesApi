@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MoviesApi.DTOs;
 using MoviesApi.Entities;
 using MoviesApi.Filters;
 using MoviesApi.Services;
@@ -22,16 +24,26 @@ namespace MoviesApi.Controllers
 
         private readonly ILogger<GenresController> _logger;
         private readonly ApplicationDbContext _context;
-        public GenresController(ILogger<GenresController> logger, ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public GenresController(ILogger<GenresController> logger, ApplicationDbContext context, IMapper mapper)
         {
             _logger = logger;
             _context = context;
+            _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Genre>>> Get()
+        public async Task<ActionResult<List<GenreDTO>>> Get()
         {
             _logger.LogInformation("Getting All the Genres");
-            return await _context.Genres.ToListAsync();
+            var genres =  await _context.Genres.ToListAsync();
+
+            var genreDTOs = new List<GenreDTO>();
+            foreach (var genre in genres) 
+            {
+                genreDTOs.Add(new GenreDTO { Id= genre.Id, Name= genre.Name });
+            
+            }
+            return genreDTOs;
         }
 
         //api/genres
