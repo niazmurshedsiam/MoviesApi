@@ -35,15 +35,17 @@ namespace MoviesApi.Controllers
         public async Task<ActionResult<List<GenreDTO>>> Get()
         {
             _logger.LogInformation("Getting All the Genres");
-            var genres =  await _context.Genres.ToListAsync();
+            var genres = await _context.Genres.ToArrayAsync();
+            return _mapper.Map<List<GenreDTO>>(genres);
+            //var genres =  await _context.Genres.ToListAsync();
 
-            var genreDTOs = new List<GenreDTO>();
-            foreach (var genre in genres) 
-            {
-                genreDTOs.Add(new GenreDTO { Id= genre.Id, Name= genre.Name });
+            //var genreDTOs = new List<GenreDTO>();
+            //foreach (var genre in genres) 
+            //{
+            //    genreDTOs.Add(new GenreDTO { Id= genre.Id, Name= genre.Name });
             
-            }
-            return genreDTOs;
+            //}
+            //return genreDTOs;
         }
 
         //api/genres
@@ -92,8 +94,9 @@ namespace MoviesApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Genre genre)
+        public async Task<ActionResult> Post([FromBody] GenreCreationDTO genreCreationDTO)
         {
+            var genre = _mapper.Map<Genre>(genreCreationDTO);
             _context.Add(genre);
             await _context.SaveChangesAsync();
             return NoContent();
