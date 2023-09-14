@@ -32,9 +32,10 @@ namespace MoviesApi.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<List<GenreDTO>>> Get()
+        public async Task<ActionResult<List<GenreDTO>>> Get([FromBody] PaginationDTO paginationDTO)
         {
             _logger.LogInformation("Getting All the Genres");
+            var queryable = _context.Genres.AsQueryable();
             var genres = await _context.Genres.ToArrayAsync();
             return _mapper.Map<List<GenreDTO>>(genres);
             //var genres =  await _context.Genres.ToListAsync();
