@@ -41,7 +41,7 @@ namespace MoviesApi
 
             services.AddControllers(options => {
                 options.Filters.Add(typeof(MyActionFilter));
-                options.Filters.Add(typeof(ParseBadRequest));
+                //options.Filters.Add(typeof(ParseBadRequest));
             }).ConfigureApiBehaviorOptions(BadRequestsBehavior.Parse);
             services.AddResponseCaching();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
